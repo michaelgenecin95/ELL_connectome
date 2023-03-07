@@ -133,23 +133,29 @@ if ~isempty(duplicates)
         
         if scoreCard(1,2) > scoreCard(1,1)
             newPsPartners = cell_list(duplicates(i,2)).ps_partner_segments;
+            usingPSpartners = cell_list(duplicates(i,2)).id;
         else
             newPsPartners = cell_list(duplicates(i,1)).ps_partner_segments;
+            usingPSpartners = cell_list(duplicates(i,1)).id;
         end
         if scoreCard(2,2) > scoreCard(2,1)
             newPreAxonPartners = cell_list(duplicates(i,2)).preAxon_partner_segments;
+            usingPreAxonpartners = cell_list(duplicates(i,2)).id;
         else
             newPreAxonPartners = cell_list(duplicates(i,1)).preAxon_partner_segments;
+            usingPreAxonpartners = cell_list(duplicates(i,1)).id;
         end
+        
+        SegGains = length(newSegments)-length(cell_list(duplicates(i,1)).segments);
         
         cell_list(duplicates(i,1)).segments = newSegments;
         cell_list(duplicates(i,1)).ps_partner_segments = newPsPartners;
         cell_list(duplicates(i,1)).preAxon_partner_segments = newPreAxonPartners;
-        SegGains = length(newSegments)-length(cell_list(duplicates(i,1)).segments);
         
-        fprintf('cell %d and %d are duplicates, combining data... \n', cell_list(duplicates(i,1)).id, cell_list(duplicates(i,2)).id);
-        fprintf('cell %d gains %d segments... \n',cell_list(duplicates(i,1)).id,length(newSegments)-length(cell_list(duplicates(i,1)).segments));
-        fprintf('cell %d gains %d segments... \n',cell_list(duplicates(i,1)).id,SegGains);
+        fprintf(' \n');
+        fprintf('cell %d and %d are duplicates (%s cell), combining data... \n', cell_list(duplicates(i,1)).id, cell_list(duplicates(i,2)).id, cell_list(duplicates(i,2)).type);
+        fprintf('cell %d gains %d segments, using synapses from %d (%d)... \n',cell_list(duplicates(i,1)).id,SegGains,usingPSpartners,length(newPsPartners));
+        fprintf('using Pre-Axon synapses from %d (%d)... \n',usingPreAxonpartners,length(newPreAxonPartners));
         
         
         if isempty(cell_list(duplicates(i,1)).ps_partner_segments) && ~isempty(cell_list(duplicates(i,2)).ps_partner_segments)
@@ -395,9 +401,6 @@ end
 %%
 
 % what do do with the pre-synaptic labels?
-
-
-
 
 
 
