@@ -302,15 +302,18 @@ title('Node numbers correspond to segmentIDs')
 % use function: connectivityMap(conndata,cellnameKey,celltypeBorders,varargin)
 % where
 % conndata == matrix of connectivity data 
-% cellnameKey == three column matrix of full cell name, letter-indexed name, and segment ID
+% cellnameKey == three column matrix of full cell name, letter-indexed
+% name, and segment ID (must be aligned with order of conndata)
+
 % variable args: 
 % 'names' can be set to 'id,' 'segmentid' or 'segid' to use segment ID as 
 % name in plot, default (any other arg) will use the key name
 % 'unconnected' can be set to true to remove unconnected cells from plot
+% 'include' can be set to include specific cell types, format must be as a
+% set of strings in a cell: {'LG','LF','MG1','MG2'} default is all types.
 
-%fhandle = connectivityMap(conndata,cellnameKey);
 fhandle = figure;
-conndataInc = connectivityMap(conndata,cellnameKey,'names','id','unconnected',true,'color','hot');
+conndataInc = connectivityMap(conndata,cellnameKey,'names','id','unconnected',true,'color','hot','include',{'LF','LG','MG1','MG2'});
 %conndataInc = connectivityMap(conndata,cellnameKey,'names','id','unconnected',true,'color','white');
 set(gca,'Position',[0.18 0.03 0.7 0.8]);
 
@@ -401,6 +404,3 @@ end
 %%
 
 % what do do with the pre-synaptic labels?
-
-
-
