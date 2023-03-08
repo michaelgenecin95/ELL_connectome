@@ -1,12 +1,24 @@
 
 %% function to generate connectivity map
 
+% conndata == matrix of connectivity data 
+% cellnameKey == three column matrix of full cell name, letter-indexed
+% name, and segment ID (must be aligned with order of conndata)
+
+% variable args: 
+% 'names' can be set to 'id,' 'segmentid' or 'segid' to use segment ID as 
+% name in plot, default (any other arg) will use the key name
+% 'unconnected' can be set to true to remove unconnected cells from plot
+% 'include' can be set to include specific cell types, format must be as a
+% set of strings in a cell: {'LG','LF','MG1','MG2'} default is all types.
+
 function conndataInc = connectivityMap(conndata,cellnameKey,varargin)
 
 
 s.names = 'index';
 s.unconnected = false;
 s.color = 'hot';
+s.include = {'all'};
 
 if exist('varargin', 'var'); for i = 1:2:length(varargin); s.(varargin{i}) = varargin{i+1}; end; end
 
@@ -36,6 +48,34 @@ if s.unconnected
     cellnameKey = cellnameKeyInc;
     
 end
+
+%%
+
+if ~strcmpi(s.include{1},'all')
+    
+    conndataInc = [];
+    cellnameKeyInc = {};
+    remGroup = [];
+    removeColumns = [];
+    
+    for i = 1:length(cellnameKey)
+        
+        if sum(strcmpi(cellnameKey{i,2}(1:end-2),s.include)) > 0
+            conndataInc(end+1,:) = conndata(i,:);
+            cellnameKeyInc(end+1,:) = cellnameKey(i,:);
+        else
+            removeColumns(end+1) = i;
+        end
+        
+    end
+    conndataInc(:,removeColumns) = [];
+
+    conndata = conndataInc;
+    cellnameKey = cellnameKeyInc;
+     
+end
+
+
 %%
 %get shortest name
 shortestNameLength = length(cellnameKey{1,2});
